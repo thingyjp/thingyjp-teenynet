@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glib.h>
-#include "dhcp4.h"
+#include "include/teenynet/dhcp4.h"
 
 struct dhcp4_opt {
 	guint8 type;

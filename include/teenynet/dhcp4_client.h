@@ -3,7 +3,13 @@
 #include <net/ethernet.h>
 #include <glib.h>
 #include <gio/gio.h>
+#include <gobject/gobject.h>
 #include "dhcp4.h"
+
+G_BEGIN_DECLS
+
+#define DHCP4_TYPE_CLIENT dhcp4_client_get_type ()
+G_DECLARE_FINAL_TYPE(Dhcp4Client, dhcp4_client, DHCP4, CLIENT, GObject)
 
 #define DHCP4_CLIENT_MAXNAMESERVERS	4
 
@@ -21,36 +27,15 @@ struct dhcp4_client_lease {
 	guint32 leasetime;
 };
 
-struct dhcp4_client_cntx {
-	enum dhcp4_clientstate state;
-	unsigned ifidx;
-	guint8 mac[ETHER_ADDR_LEN];
+Dhcp4Client* dhcp4_client_new(unsigned ifidx, const guint8* mac);
+void dhcp4_client_start(Dhcp4Client* client);
+void dhcp4_client_pause(Dhcp4Client* client);
+void dhcp4_client_resume(Dhcp4Client* client);
+void dhcp4_client_stop(Dhcp4Client* client);
 
-	GRand* rand;
-	int rawsocket;
-	guint rawsocketeventsource;
+#define DHCP4_CLIENT_SIGNAL_INTERFACE           "interface"
+#define DHCP4_CLIENT_DETAIL_INTERFACE_CLEAR     "clear"
+#define DHCP4_CLIENT_DETAIL_INTERFACE_CONFIGURE "configure"
 
-	guint32 xid;
-	struct dhcp4_client_lease* pendinglease;
-	struct dhcp4_client_lease* currentlease;
+G_END_DECLS
 
-	gboolean paused;
-};
-
-struct dhcp4_client_cntx* dhcp4_client_new(unsigned ifidx, const guint8* mac);
-void dhcp4_client_start(struct dhcp4_client_cntx* cntx);
-void dhcp4_client_pause(struct dhcp4_client_cntx* ctnx);
-void dhcp4_client_resume(struct dhcp4_client_cntx* cntx);
-void dhcp4_client_stop(struct dhcp4_client_cntx* cntx);
-
-/* The intention here is to not make this stuff too dependent on the rest
- * of the code so if it turns out to be useful somewhere else in the future
- * it's easy to split out. That said here are some external functions that
- * need to be provided elsewhere
- */
-
-void _dhcp4_client_clearinterface(unsigned ifidx);
-
-void _dhcp4_client_configureinterface(unsigned ifidx, const guint8* address,
-		const guint8* netmask, const guint8* gateway, const guint8* nameservers,
-		const guint8 numnameservers);

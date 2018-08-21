@@ -1,6 +1,5 @@
 #include <glib.h>
 #include <arpa/inet.h>
-#include "dhcp4.h"
 #include "include/teenynet/dhcp4_server.h"
 #include "dhcp4_model.h"
 #include "include/teenynet/packetsocket.h"
@@ -193,7 +192,7 @@ static void dhcp4_server_checklease(gpointer data, gpointer user_data) {
 	struct dhcp4_server_cntx* cntx = user_data;
 	gint64 remaining = dhcp4_server_lease_remaining(lease);
 	g_message("checking lease for "MACFMT", %d seconds remaining",
-			MACARG(lease->mac), (int) (remaining / 1000000));
+			MACARG(lease->mac), (int ) (remaining / 1000000));
 	if (remaining < -EXPIRED) {
 		g_message("removing expired lease");
 		cntx->leases = g_slist_remove(cntx->leases, lease);
