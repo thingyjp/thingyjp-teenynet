@@ -35,7 +35,7 @@ static void dhcp4_client_class_init(Dhcp4ClientClass *klass) {
 	detail_interface_clear = g_quark_from_string(
 	DHCP4_CLIENT_DETAIL_INTERFACE_CLEAR);
 	detail_interface_configure = g_quark_from_string(
-	DHCP4_CLIENT_DETAIL_INTERFACE_CLEAR);
+	DHCP4_CLIENT_DETAIL_INTERFACE_CONFIGURE);
 }
 
 static void dhcp4_client_init(Dhcp4Client *self) {
