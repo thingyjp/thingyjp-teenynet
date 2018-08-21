@@ -1,8 +1,8 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include <net/ethernet.h>
-#include "buildconfig.h"
 #include "dhcp4_model.h"
+#include "config.h"
 
 struct dhcp4_pktcntx* dhcp4_model_pkt_new() {
 	struct dhcp4_pktcntx* pktcntx = g_malloc0(sizeof(*pktcntx));

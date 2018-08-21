@@ -122,7 +122,9 @@ static void dhcp4_client_processdhcppkt(Dhcp4Client* client,
 	if (pktcntx->header->xid == client->xid) {
 		guint8 dhcpmessagetype = dhcp4_model_pkt_get_dhcpmessagetype(pktcntx);
 
-		g_message("dhcp type %d", (int ) dhcpmessagetype);
+#ifdef D4CDEBUG
+		g_message("processing dhcp message type %d", (int ) dhcpmessagetype);
+#endif
 
 		switch (client->state) {
 		case DHCP4CS_DISCOVERING:
@@ -187,7 +189,9 @@ static gboolean dhcp4_client_rawsocketcallback(GIOChannel *source,
 
 static void dhcp4_client_changestate(Dhcp4Client* client,
 		enum dhcp4_clientstate newstate) {
+#ifdef D4CDEBUG
 	g_message("moving from state %d to %d", client->state, newstate);
+#endif
 
 	client->state = newstate;
 	switch (client->state) {

@@ -1,0 +1,4 @@
+option('debug', type : 'boolean', value : false)
+option('debug_packetsocket', type : 'boolean', value : false)
+option('debug_dhcp4model', type : 'boolean', value : false)
+option('debug_dhcp4client', type : 'boolean', value : false)

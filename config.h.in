@@ -1,0 +1,18 @@
+#define DEVELOPMENT
+
+#if @debug@
+#define DEBUG
+
+#if @debug_ps@
+#define PSDEBUG // debugging for packetsocket
+#endif //psdebug
+
+#if @debug_d4m@
+#define D4MDEBUG
+#endif //d4mdebug
+
+#if @debug_d4c@
+#define D4CDEBUG
+#endif //d4cdebug
+
+#endif //debug

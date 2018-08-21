@@ -5,8 +5,8 @@
 #include <netinet/ip.h>
 #include <netinet/udp.h>
 #include <errno.h>
-#include "buildconfig.h"
 #include "include/teenynet/packetsocket.h"
+#include "config.h"
 
 struct __attribute__((__packed__)) udppseudohdr {
 	guint32 sa;
@@ -54,7 +54,10 @@ int packetsocket_createsocket_udp(int ifindex, const guint8* mac) {
 	int recvbuffsz = 32 * 1024;
 	setsockopt(sock, SOL_SOCKET, SO_RCVBUF, &recvbuffsz, sizeof(recvbuffsz));
 
+#ifdef PSDEBUG
 	g_message("created raw socket %d", sock);
+#endif
+
 	return sock;
 }
 
