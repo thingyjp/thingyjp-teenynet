@@ -31,14 +31,18 @@ Dhcp4Client* dhcp4_client_new(unsigned ifidx, const guint8* mac);
 void dhcp4_client_start(Dhcp4Client* client);
 void dhcp4_client_pause(Dhcp4Client* client);
 void dhcp4_client_resume(Dhcp4Client* client);
+enum dhcp4_clientstate dhcp4_client_getstate(Dhcp4Client* client);
+struct dhcp4_client_lease* dhcp4_client_getlease(Dhcp4Client* client);
 void dhcp4_client_stop(Dhcp4Client* client);
 
-#define DHCP4_CLIENT_SIGNAL_INTERFACE           "interface"
-#define DHCP4_CLIENT_DETAIL_INTERFACE_CLEAR     "clear"
-#define DHCP4_CLIENT_DETAIL_INTERFACE_CONFIGURE "configure"
+#define DHCP4_CLIENT_SIGNAL_LEASE           "lease"
+#define DHCP4_CLIENT_DETAIL_LEASE_OBTAINED  "obtained"
+#define DHCP4_CLIENT_DETAIL_LEASE_RENEWED   "renewed"
+#define DHCP4_CLIENT_DETAIL_LEASE_EXPIRED   "expired"
 
-#define DHCP4_CLIENT_DETAILEDSIGNAL_INTERFACE_CLEAR     DHCP4_CLIENT_SIGNAL_INTERFACE"::"DHCP4_CLIENT_DETAIL_INTERFACE_CLEAR
-#define DHCP4_CLIENT_DETAILEDSIGNAL_INTERFACE_CONFIGURE DHCP4_CLIENT_SIGNAL_INTERFACE"::"DHCP4_CLIENT_DETAIL_INTERFACE_CONFIGURE
+#define DHCP4_CLIENT_DETAILEDSIGNAL_LEASE_OBTAINED DHCP4_CLIENT_SIGNAL_LEASE"::"DHCP4_CLIENT_DETAIL_LEASE_OBTAINED
+#define DHCP4_CLIENT_DETAILEDSIGNAL_LEASE_RENEWED  DHCP4_CLIENT_SIGNAL_LEASE"::"DHCP4_CLIENT_DETAIL_LEASE_RENEWED
+#define DHCP4_CLIENT_DETAILEDSIGNAL_LEASE_EXPIRED  DHCP4_CLIENT_SIGNAL_LEASE"::"DHCP4_CLIENT_DETAIL_LEASE_EXPIRED
 
 G_END_DECLS
 

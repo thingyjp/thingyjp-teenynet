@@ -22,20 +22,24 @@ struct _Dhcp4Client {
 
 G_DEFINE_TYPE(Dhcp4Client, dhcp4_client, G_TYPE_OBJECT)
 
-static guint signal_interface;
-static GQuark detail_interface_clear;
-static GQuark detail_interface_configure;
+static guint signal_lease;
+static GQuark detail_lease_obtained;
+static GQuark detail_lease_renewed;
+static GQuark detail_lease_expired;
 
 static void dhcp4_client_class_init(Dhcp4ClientClass *klass) {
 	GSignalFlags flags = G_SIGNAL_RUN_LAST | G_SIGNAL_NO_HOOKS
 			| G_SIGNAL_NO_RECURSE | G_SIGNAL_DETAILED;
-	signal_interface = g_signal_newv(DHCP4_CLIENT_SIGNAL_INTERFACE,
+	GType params[] = { G_TYPE_POINTER };
+	signal_lease = g_signal_newv(DHCP4_CLIENT_SIGNAL_LEASE,
 	DHCP4_TYPE_CLIENT, flags, NULL,
-	NULL, NULL, NULL, G_TYPE_NONE, 0, NULL);
-	detail_interface_clear = g_quark_from_string(
-	DHCP4_CLIENT_DETAIL_INTERFACE_CLEAR);
-	detail_interface_configure = g_quark_from_string(
-	DHCP4_CLIENT_DETAIL_INTERFACE_CONFIGURE);
+	NULL, NULL, NULL, G_TYPE_NONE, G_N_ELEMENTS(params), params);
+	detail_lease_obtained = g_quark_from_string(
+	DHCP4_CLIENT_DETAIL_LEASE_OBTAINED);
+	detail_lease_renewed = g_quark_from_string(
+	DHCP4_CLIENT_DETAIL_LEASE_RENEWED);
+	detail_lease_expired = g_quark_from_string(
+	DHCP4_CLIENT_DETAIL_LEASE_EXPIRED);
 }
 
 static void dhcp4_client_init(Dhcp4Client *self) {
@@ -139,10 +143,12 @@ static void dhcp4_client_processdhcppkt(Dhcp4Client* client,
 				dhcp4_model_pkt_get_leasetime(pktcntx, &lease->leasetime);
 				dhcp4_model_pkt_get_domainnameservers(pktcntx,
 						(guint8*) lease->nameservers, &lease->numnameservers);
+#ifdef D4CDEBUG
 				g_message(
 						"have dhcp offer of "IP4_ADDRFMT"/"IP4_ADDRFMT" for %u seconds from "IP4_ADDRFMT,
 						IP4_ARGS(lease->leasedip), IP4_ARGS(lease->subnetmask),
 						lease->leasetime, IP4_ARGS(lease->serverip));
+#endif
 				client->pendinglease = lease;
 				dhcp4_client_changestate(client, DHCP4CS_REQUESTING);
 				break;
@@ -217,7 +223,8 @@ static void dhcp4_client_changestate(Dhcp4Client* client,
 		client->rawsocket = -1;
 		client->currentlease = client->pendinglease;
 		client->pendinglease = NULL;
-		g_signal_emit(client, signal_interface, detail_interface_configure);
+		g_signal_emit(client, signal_lease, detail_lease_obtained,
+				client->currentlease);
 		g_timeout_add(client->currentlease->leasetime * 1000,
 				dhcp4_client_leasetimeout, client);
 		break;
@@ -227,7 +234,6 @@ static void dhcp4_client_changestate(Dhcp4Client* client,
 }
 
 void dhcp4_client_start(Dhcp4Client* client) {
-	g_signal_emit(client, signal_interface, detail_interface_clear);
 	dhcp4_client_changestate(client, DHCP4CS_DISCOVERING);
 }
 
@@ -237,6 +243,13 @@ void dhcp4_client_pause(Dhcp4Client* client) {
 
 void dhcp4_client_resume(Dhcp4Client* client) {
 	client->paused = FALSE;
+}
+
+enum dhcp4_clientstate dhcp4_client_getstate(Dhcp4Client* client) {
+	return client->state;
+}
+struct dhcp4_client_lease* dhcp4_client_getlease(Dhcp4Client* client) {
+	return client->currentlease;
 }
 
 void dhcp4_client_stop(Dhcp4Client* client) {

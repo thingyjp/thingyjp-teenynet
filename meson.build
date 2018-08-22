@@ -19,7 +19,8 @@ configure_file(input : 'config.h.in',
 install_headers(['include/teenynet/dhcp4.h',
                  'include/teenynet/dhcp4_client.h',
                  'include/teenynet/dhcp4_server.h',
-                 'include/teenynet/http.h'], 
+                 'include/teenynet/http.h',
+                 'include/teenynet/ip4.h'], 
                 subdir : 'teenynet')
 
 pkg = import('pkgconfig')
