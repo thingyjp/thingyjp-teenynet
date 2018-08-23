@@ -245,6 +245,10 @@ void dhcp4_client_resume(Dhcp4Client* client) {
 	client->paused = FALSE;
 }
 
+unsigned dhcp4_client_getifindx(Dhcp4Client* client) {
+	return client->ifidx;
+}
+
 enum dhcp4_clientstate dhcp4_client_getstate(Dhcp4Client* client) {
 	return client->state;
 }
