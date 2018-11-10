@@ -3,6 +3,9 @@
 #include "include/teenynet/ip4.h"
 #include "dhcp4_model.h"
 
+//TODO add proper lease renewal
+//TODO add lease release
+
 struct _Dhcp4Client {
 	GObject parent_instance;
 	enum dhcp4_clientstate state;
