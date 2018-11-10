@@ -29,8 +29,12 @@ install_headers(['include/teenynet/dhcp4.h',
                  'include/teenynet/ip4.h',
                  'include/teenynet/unix.h'],
                 subdir : 'teenynet')
+                
+inc = include_directories('include')
 
 pkg = import('pkgconfig')
 pkg.generate(lib,
 			 version : '0.1',
              filebase : 'libteenynet')
+
+teenynet_dep = declare_dependency(include_directories : inc, link_with : lib)
