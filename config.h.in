@@ -1,6 +1,6 @@
 #define DEVELOPMENT
 
-#if @debug@
+#if @debugbuild@
 #define DEBUG
 
 #if @debug_ps@

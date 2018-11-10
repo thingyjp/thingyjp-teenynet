@@ -14,7 +14,7 @@ lib = shared_library('teenynet', src,
                      install : true)
                      
 conf_data = configuration_data()
-conf_data.set('debug', get_option('debug') ? 1 : 0)
+conf_data.set('debugbuild', get_option('debugbuild') ? 1 : 0)
 conf_data.set('debug_ps', get_option('debug_packetsocket') ? 1 : 0)
 conf_data.set('debug_d4m', get_option('debug_dhcp4model') ? 1 : 0)
 conf_data.set('debug_d4c', get_option('debug_dhcp4client') ? 1 : 0)
